@@ -4,10 +4,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
+    appBar: {
         flexGrow: 1,
+
+        '& a': {
+            color: '#fff'
+        }
     },
     title: {
         flexGrow: 1,
@@ -19,17 +24,19 @@ function Header() {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
-                        Chat
-                    </Typography>
-                    <Button color="inherit">Login</Button>
-                    <Button color="inherit">Registration</Button>
-                </Toolbar>
-            </AppBar>
-        </div>
+        <AppBar position="static" className={classes.appBar}>
+            <Toolbar>
+                <Typography variant="h6" className={classes.title}>
+                    <Link to="/">Chat</Link>
+                </Typography>
+                <Button color="inherit">
+                    <Link to="/login">Login</Link>
+                </Button>
+                <Button color="inherit">
+                    <Link to="/registration">Registration</Link>
+                </Button>
+            </Toolbar>
+        </AppBar>
     );
 }
 
