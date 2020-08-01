@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import { IconButton, Button, Typography, Toolbar, AppBar } from '@material-ui/core';
+import { AccountCircle } from '@material-ui/icons';
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+
+import { isAuthSelector } from '../../redux/selectors/userSelector';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Header() {
     const classes = useStyles();
+    const isAuth = useSelector(isAuthSelector);
 
     return (
         <AppBar position="static" className={classes.appBar}>
@@ -29,12 +31,27 @@ function Header() {
                 <Typography variant="h6" className={classes.title}>
                     <Link to="/">Chat</Link>
                 </Typography>
-                <Button color="inherit">
-                    <Link to="/login">Login</Link>
-                </Button>
-                <Button color="inherit">
-                    <Link to="/registration">Registration</Link>
-                </Button>
+                {!isAuth ?
+                    <>
+                        <Button color="inherit">
+                            <Link to="/login">Login</Link>
+                        </Button>
+                        <Button color="inherit">
+                            <Link to="/registration">Registration</Link>
+                        </Button>
+                    </> :
+                    <IconButton
+                        edge="end"
+                        aria-label="account of current user"
+                        aria-haspopup="true"
+                        color="inherit"
+                    >
+                        <Link to="/profile">
+                            <AccountCircle />
+                        </Link>
+                    </IconButton>
+                }
+
             </Toolbar>
         </AppBar>
     );

@@ -1,20 +1,12 @@
 import React from 'react';
+import { FormControl, FormHelperText, TextField } from '@material-ui/core';
 
-import TextField from '@material-ui/core/TextField';
-
-function FormField({ input, ...rest }) {
-    // switch (input.type) {
-    //     case 'text':
-    //         return <TextField {...rest} />
-
-    //     default:
-    //         return <TextField {...rest} />
-    //         break;
-    // }
+function FormField({ input, meta, ...rest }) {
     return (
-        <>
+        <FormControl error={meta.error && meta.touched} fullWidth={rest.fullWidth}>
             <TextField {...input} {...rest} />
-        </>
+            {meta.error && meta.touched && <FormHelperText>{meta.error}</FormHelperText>}
+        </FormControl>
     );
 }
 

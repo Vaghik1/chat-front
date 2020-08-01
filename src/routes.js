@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 
 import Login from './components/authentication/login';
 import Registration from './components/authentication/registration';
+import Verify from './components/authentication/verify';
 import Home from './components/home';
 
 function Routes() {
@@ -17,6 +18,7 @@ function Routes() {
             <Route path="/registration">
                 <Registration />
             </Route>
+            <Route path="/user/verify/:token" children={<Verify />} />
         </Switch>
     );
 }

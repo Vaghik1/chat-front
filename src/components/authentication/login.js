@@ -1,10 +1,79 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { Form, Field } from 'react-final-form';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+
+import FormField from '../../components/common/form-fields';
+import { setProfile } from '../../redux/modules/users';
 
 function Login() {
+    const dispatch = useDispatch();
+    const dispatchSetProfile = useCallback(
+        (response) => dispatch(setProfile(response)),
+        [dispatch]
+    );
+
+    const onSubmit = (values) => {
+        axios.post(`${process.env.REACT_APP_API_URL}/user/login`, values, { withCredentials: true })
+            .then(function (response) {
+                if (response.data && response.data.success) {
+                    dispatchSetProfile(response.data.data);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    const validate = () => {
+
+    }
+
     return (
-        <>
-            Login
-        </>
+        <Container maxWidth="sm">
+            <Form
+                onSubmit={onSubmit}
+                validate={validate}
+                render={({ handleSubmit }) => (
+                    <form onSubmit={handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography variant="h4">
+                                    Login
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Field
+                                    name="email"
+                                    label="Email"
+                                    component={FormField}
+                                    type="text"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Field
+                                    name="password"
+                                    label="Password"
+                                    component={FormField}
+                                    fullWidth
+                                    type="password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button variant="contained" color="primary" type="submit">
+                                    Submit
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
+                )}
+            />
+        </Container>
     );
 }
 

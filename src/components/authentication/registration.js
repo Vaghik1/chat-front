@@ -5,30 +5,38 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 import FormField from '../../components/common/form-fields';
+import registrationValidation from '../../utils/validation/registrationValidation';
 
 function Registration() {
-    const onSubmit = (values) => {
-        axios.post('/register', values)
+    const { enqueueSnackbar } = useSnackbar();
+    const onSubmit = async (values, form) => {
+        await axios.post(`${process.env.REACT_APP_API_URL}/user/register`, values)
             .then(function (response) {
-                console.log(response);
+                enqueueSnackbar('Confirm Email', { variant: 'success' });
+                setTimeout(form.restart);
             })
             .catch(function (error) {
-                console.log(error);
+                if (typeof error.response.data.data === 'string') {
+                    enqueueSnackbar(error.response.data.data);
+                } else {
+                    Object.keys(error.response.data.error).forEach(errorKey => {
+                        error.response.data.error[errorKey].forEach(error => {
+                            enqueueSnackbar(error);
+                        })
+                    });
+                }
             });
-    }
-
-    const validate = () => {
-
     }
 
     return (
         <Container maxWidth="sm">
             <Form
                 onSubmit={onSubmit}
-                validate={validate}
-                render={({ handleSubmit }) => (
+                validate={registrationValidation}
+                render={({ handleSubmit, submitting, pristine }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -47,6 +55,15 @@ function Registration() {
                             </Grid>
                             <Grid item xs={12}>
                                 <Field
+                                    name="name"
+                                    label="Full name"
+                                    component={FormField}
+                                    type="text"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Field
                                     name="password"
                                     label="Password"
                                     component={FormField}
@@ -55,7 +72,7 @@ function Registration() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Button variant="contained" color="primary" type="submit">
+                                <Button variant="contained" color="primary" type="submit" disabled={submitting || pristine}>
                                     Submit
                                 </Button>
                             </Grid>
