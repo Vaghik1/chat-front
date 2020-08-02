@@ -5,31 +5,48 @@ import axios from 'axios';
 function useCallApi() {
     const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
-
-    const apiCaller = (actionType, endPoint, data, successCallbackFunc) => {
+    const [apiCaller] = useState(() => (
+        actionType,
+        endPoint,
+        data,
+        successCallbackFunc,
+        errorCallbackFunc,
+        isShowError = true,
+        configs = {}
+    ) => {
         setIsLoading(true);
 
-        axios({
+        return axios({
             method: actionType,
             url: `${process.env.REACT_APP_API_URL}/${endPoint}`,
-            data
+            data,
+            ...configs
         }).then(response => {
-            enqueueSnackbar('Confirm Email', { variant: 'success' });
-            successCallbackFunc(response);
+            if (successCallbackFunc) {
+                successCallbackFunc(response);
+            }
         }).catch(error => {
-            if (typeof error.response.data === 'string') {
-                enqueueSnackbar(error.response.data);
-            } else {
-                Object.keys(error.response.data.error).forEach(errorKey => {
-                    error.response.data.error[errorKey].forEach(error => {
-                        enqueueSnackbar(error);
-                    })
-                });
+            console.log(error);
+            if (errorCallbackFunc) {
+                errorCallbackFunc(error);
+            }
+            if (isShowError && error.response) {
+                if (typeof error.response.data === 'string') {
+                    enqueueSnackbar(error.response.data);
+                } else {
+                    if (error.response.data.error) {
+                        Object.keys(error.response.data.error).forEach(errorKey => {
+                            error.response.data.error[errorKey].forEach(error => {
+                                enqueueSnackbar(error);
+                            })
+                        });
+                    }
+                }
             }
         }).finally(() => {
             setIsLoading(false);
         });
-    }
+    });
 
     return {
         isLoading,

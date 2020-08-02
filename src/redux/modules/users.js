@@ -1,4 +1,6 @@
 const SET_PROFILE = 'SET_PROFILE';
+const SET_IS_AUTH = 'SET_IS_AUTH';
+const SET_USERS = 'SET_USERS';
 
 export function setProfile(payload) {
     return {
@@ -7,9 +9,24 @@ export function setProfile(payload) {
     }
 }
 
+export function setIsAuth(payload) {
+    return {
+        type: SET_IS_AUTH,
+        payload
+    }
+}
+
+export function setUsers(payload) {
+    return {
+        type: SET_USERS,
+        payload
+    }
+}
+
 const initialState = {
     profile: null,
-    isAuth: null
+    isAuth: null,
+    users: null
 };
 
 export default function reducer(state = initialState, action) {
@@ -22,7 +39,25 @@ export default function reducer(state = initialState, action) {
                 state,
                 {
                     profile: payload,
-                    isAuth: true
+                    isAuth: payload ? true : false
+                }
+            );
+
+        case SET_IS_AUTH:
+            return Object.assign(
+                {},
+                state,
+                {
+                    isAuth: payload
+                }
+            );
+
+        case SET_USERS:
+            return Object.assign(
+                {},
+                state,
+                {
+                    users: payload
                 }
             );
 

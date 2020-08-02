@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
 
 import FormField from '../../components/common/form-fields';
 import Loading from '../common/loading';
@@ -13,6 +14,7 @@ import useCallApi from '../../hooks/useCallApi';
 import loginValidation from '../../utils/validation/loginValidation';
 
 function Login() {
+    let history = useHistory();
     const { isLoading, apiCaller } = useCallApi();
     const dispatch = useDispatch();
     const dispatchSetProfile = useCallback(
@@ -21,9 +23,10 @@ function Login() {
     );
 
     const onSubmit = (values) => {
-        apiCaller('post', 'user/login', values, (response) => {
+        apiCaller('post', 'auth/login', values, (response) => {
             dispatchSetProfile(response.data.data);
-        });
+            history.push('/');
+        }, null, true, { withCredentials: true });
     }
 
     return (

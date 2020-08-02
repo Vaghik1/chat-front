@@ -1,23 +1,31 @@
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import axios from 'axios';
+import { useSnackbar } from 'notistack';
+import Typography from '@material-ui/core/Typography';
+import { useHistory } from "react-router-dom";
+
+import useCallApi from '../../hooks/useCallApi';
+import Loading from '../common/loading';
 
 function Verify() {
+    let history = useHistory();
+    const { enqueueSnackbar } = useSnackbar();
     let { token } = useParams();
+    const { isLoading, apiCaller } = useCallApi();
 
     useEffect(() => {
-        axios.post(`${process.env.REACT_APP_API_URL}/user/verify?verification_code=${token}`)
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }, [token]);
+        apiCaller('post', `auth/verify?verification_code=${token}`, null, () => {
+            enqueueSnackbar('You have successfully confirmed your registration', { variant: 'success' });
+            history.push('/');
+        });
+    }, [token, enqueueSnackbar, apiCaller, history]);
 
     return (
         <>
-            {token}
+            <Typography variant="h4">
+                Account Verification
+            </Typography>
+            <Loading open={isLoading} />
         </>
     );
 }

@@ -16,14 +16,14 @@ export function validateCommonErrors(values, errors, fields) {
         },
         isMinLength: (value, { minCount }) => {
             if (value && value.length < minCount) {
-                return 'Wrong minimum symbol count';
+                return 'Minimum symbol count is ' + minCount;
             }
 
             return null;
         },
         isMaxLength: (value, { maxCount }) => {
             if (value && value.length > maxCount) {
-                return 'Wrong max symbol count';
+                return 'Max symbol count is ' + maxCount;
             }
 
             return null;

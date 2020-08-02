@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { useSnackbar } from 'notistack';
 
 import FormField from '../../components/common/form-fields';
 import registrationValidation from '../../utils/validation/registrationValidation';
@@ -11,16 +12,18 @@ import Loading from '../common/loading';
 import useCallApi from '../../hooks/useCallApi';
 
 function Registration() {
+    const { enqueueSnackbar } = useSnackbar();
     const { isLoading, apiCaller } = useCallApi();
 
     const onSubmit = async (values, form) => {
-        apiCaller('post', 'user/register', values, () => {
+        await apiCaller('post', 'auth/register', values, () => {
+            enqueueSnackbar('Confirm Email', { variant: 'success' });
             setTimeout(form.restart);
         });
     }
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
             <Form
                 onSubmit={onSubmit}
                 validate={registrationValidation}
@@ -32,16 +35,7 @@ function Registration() {
                                     Registration
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Field
-                                    name="email"
-                                    label="Email"
-                                    component={FormField}
-                                    type="text"
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <Field
                                     name="name"
                                     label="Full name"
@@ -50,7 +44,25 @@ function Registration() {
                                     fullWidth
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
+                                <Field
+                                    name="username"
+                                    label="Username"
+                                    component={FormField}
+                                    type="text"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Field
+                                    name="email"
+                                    label="Email"
+                                    component={FormField}
+                                    type="text"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
                                 <Field
                                     name="password"
                                     label="Password"

@@ -28,15 +28,8 @@ export default (values) => {
                 { name: 'isMaxLength', maxCount: 255 }
             ]
         },
-        {
-            fieldName: 'password',
-            validate: [
-                'isRequired',
-                { name: 'isMaxLength', maxCount: 255 },
-                { name: 'isMinLength', minCount: 8 }
-            ]
-        },
     ]);
 
+    console.log(errors);
     return errors;
 }
