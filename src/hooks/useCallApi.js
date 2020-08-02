@@ -17,8 +17,8 @@ function useCallApi() {
             enqueueSnackbar('Confirm Email', { variant: 'success' });
             successCallbackFunc(response);
         }).catch(error => {
-            if (typeof error.response.data.data === 'string') {
-                enqueueSnackbar(error.response.data.data);
+            if (typeof error.response.data === 'string') {
+                enqueueSnackbar(error.response.data);
             } else {
                 Object.keys(error.response.data.error).forEach(errorKey => {
                     error.response.data.error[errorKey].forEach(error => {
