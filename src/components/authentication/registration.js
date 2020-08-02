@@ -4,31 +4,19 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import axios from 'axios';
-import { useSnackbar } from 'notistack';
 
 import FormField from '../../components/common/form-fields';
 import registrationValidation from '../../utils/validation/registrationValidation';
+import Loading from '../common/loading';
+import useCallApi from '../../hooks/useCallApi';
 
 function Registration() {
-    const { enqueueSnackbar } = useSnackbar();
+    const { isLoading, apiCaller } = useCallApi();
+
     const onSubmit = async (values, form) => {
-        await axios.post(`${process.env.REACT_APP_API_URL}/user/register`, values)
-            .then(function (response) {
-                enqueueSnackbar('Confirm Email', { variant: 'success' });
-                setTimeout(form.restart);
-            })
-            .catch(function (error) {
-                if (typeof error.response.data.data === 'string') {
-                    enqueueSnackbar(error.response.data.data);
-                } else {
-                    Object.keys(error.response.data.error).forEach(errorKey => {
-                        error.response.data.error[errorKey].forEach(error => {
-                            enqueueSnackbar(error);
-                        })
-                    });
-                }
-            });
+        apiCaller('post', 'user/register', values, () => {
+            setTimeout(form.restart);
+        });
     }
 
     return (
@@ -80,6 +68,7 @@ function Registration() {
                     </form>
                 )}
             />
+            <Loading open={isLoading} />
         </Container>
     );
 }

@@ -4,13 +4,16 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 import FormField from '../../components/common/form-fields';
+import Loading from '../common/loading';
 import { setProfile } from '../../redux/modules/users';
+import useCallApi from '../../hooks/useCallApi';
+import loginValidation from '../../utils/validation/loginValidation';
 
 function Login() {
+    const { isLoading, apiCaller } = useCallApi();
     const dispatch = useDispatch();
     const dispatchSetProfile = useCallback(
         (response) => dispatch(setProfile(response)),
@@ -18,26 +21,16 @@ function Login() {
     );
 
     const onSubmit = (values) => {
-        axios.post(`${process.env.REACT_APP_API_URL}/user/login`, values, { withCredentials: true })
-            .then(function (response) {
-                if (response.data && response.data.success) {
-                    dispatchSetProfile(response.data.data);
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    const validate = () => {
-
+        apiCaller('post', 'user/login', values, (response) => {
+            dispatchSetProfile(response.data.data);
+        });
     }
 
     return (
         <Container maxWidth="sm">
             <Form
                 onSubmit={onSubmit}
-                validate={validate}
+                validate={loginValidation}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
@@ -73,6 +66,7 @@ function Login() {
                     </form>
                 )}
             />
+            <Loading open={isLoading} />
         </Container>
     );
 }
