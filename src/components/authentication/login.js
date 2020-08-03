@@ -33,6 +33,7 @@ function Login() {
             <Form
                 onSubmit={onSubmit}
                 validate={loginValidation}
+                subscription={{ submitting: true, pristine: true }}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>

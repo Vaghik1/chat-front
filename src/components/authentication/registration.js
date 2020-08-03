@@ -26,6 +26,7 @@ function Registration() {
             <Form
                 onSubmit={onSubmit}
                 validate={registrationValidation}
+                subscription={{ submitting: true, pristine: true }}
                 render={({ handleSubmit, submitting, pristine }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>

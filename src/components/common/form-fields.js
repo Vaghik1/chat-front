@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FormControl, FormHelperText, TextField } from '@material-ui/core';
 
 function FormField({ input, meta, ...rest }) {
@@ -10,4 +10,4 @@ function FormField({ input, meta, ...rest }) {
     );
 }
 
-export default FormField;
+export default memo(FormField);
