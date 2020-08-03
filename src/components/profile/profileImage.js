@@ -32,12 +32,10 @@ function ProfileImage() {
     const [imageSrc, setImageSrc] = useState('');
     const [newImage, setNewImage] = useState('');
     const [cropedImageSrc, setCropedImageSrc] = useState('');
-
     const onLoad = useCallback(img => {
         setNewImage(img);
     }, []);
-
-    const handleUploadClick = (event) => {
+    const handleUploadClick = useCallback((event) => {
         var file = event.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -47,18 +45,16 @@ function ProfileImage() {
             setCropedImageSrc('');
             setImageSrc(reader.result);
         };
-    }
-
-    const cropImage = () => {
+    }, []);
+    const cropImage = useCallback(() => {
         const croppedImg = getCroppedImg(newImage, crop, 'profileImage');
         setCropedImageSrc(croppedImg);
         setImageSrc('');
-    }
-
-    const cancelCropImage = () => {
+    }, [crop, newImage]);
+    const cancelCropImage = useCallback(() => {
         setCropedImageSrc('');
         setImageSrc('');
-    }
+    }, []);
 
     return (
         <>

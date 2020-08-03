@@ -27,20 +27,18 @@ function Profile() {
         (response) => dispatch(setProfile(response)),
         [dispatch]
     );
-
-    const onSubmit = async (values) => {
+    const onSubmit = useCallback(async (values) => {
         await apiCaller('put', 'user/update', values, () => {
             enqueueSnackbar('Updated succesfully', { variant: 'success' });
         }, null, true, { withCredentials: true });
-    }
-
-    const logoutUser = () => {
+    }, [apiCaller, enqueueSnackbar]);
+    const logoutUser = useCallback(() => {
         apiCaller('get', 'auth/logout', null, () => {
             dispatchSetProfile(null);
             enqueueSnackbar('Success', { variant: 'success' });
             history.push('/');
         }, null, true, { withCredentials: true });
-    }
+    }, [apiCaller, dispatchSetProfile, enqueueSnackbar, history]);
 
     return (
         <Container maxWidth="sm">

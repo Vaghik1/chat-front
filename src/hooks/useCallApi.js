@@ -26,7 +26,6 @@ function useCallApi() {
                 successCallbackFunc(response);
             }
         }).catch(error => {
-            console.log(error);
             if (errorCallbackFunc) {
                 errorCallbackFunc(error);
             }

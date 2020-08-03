@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Form, Field } from 'react-final-form';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -14,13 +14,12 @@ import useCallApi from '../../hooks/useCallApi';
 function Registration() {
     const { enqueueSnackbar } = useSnackbar();
     const { isLoading, apiCaller } = useCallApi();
-
-    const onSubmit = async (values, form) => {
+    const onSubmit = useCallback(async (values, form) => {
         await apiCaller('post', 'auth/register', values, () => {
             enqueueSnackbar('Confirm Email', { variant: 'success' });
             setTimeout(form.restart);
         });
-    }
+    }, [apiCaller, enqueueSnackbar]);
 
     return (
         <Container maxWidth="md">

@@ -21,13 +21,12 @@ function Login() {
         (response) => dispatch(setProfile(response)),
         [dispatch]
     );
-
-    const onSubmit = (values) => {
+    const onSubmit = useCallback((values) => {
         apiCaller('post', 'auth/login', values, (response) => {
             dispatchSetProfile(response.data.data);
             history.push('/');
         }, null, true, { withCredentials: true });
-    }
+    }, [apiCaller, dispatchSetProfile, history]);
 
     return (
         <Container maxWidth="sm">

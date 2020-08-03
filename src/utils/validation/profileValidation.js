@@ -30,6 +30,5 @@ export default (values) => {
         },
     ]);
 
-    console.log(errors);
     return errors;
 }
