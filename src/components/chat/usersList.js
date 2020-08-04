@@ -49,7 +49,7 @@ const ChatUsersList = () => {
         <Grid item xs={3} className={classes.borderRight500}>
             <List>
                 {
-                    users && users.length && users.map((user, index) => {
+                    users && !!users.length && users.map((user, index) => {
                         const { id, name } = user;
 
                         return (
