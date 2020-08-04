@@ -1,9 +1,7 @@
-import Pusher from 'pusher-js';
 import Echo from 'laravel-echo';
 import axios from 'axios';
 
-window.pusher = Pusher;
-export default (() => {
+export default () => {
     const authorizer = (channel) => {
         return {
             authorize: (socketId, callback) => {
@@ -15,10 +13,11 @@ export default (() => {
                         channel_name: channel.name
                     }
                 }).then(res => {
-                    if (!res.ok) {
+                    if (res.data && res.data.auth) {
+                        return res.data;
+                    } else {
                         throw new Error(`Received ${res.statusCode}`);
                     }
-                    return res.json();
                 }).then(data => {
                     callback(null, data);
                 }).catch(err => {
@@ -39,4 +38,4 @@ export default (() => {
     };
 
     return new Echo(options);
-})();
+};
